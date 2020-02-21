@@ -18,7 +18,13 @@ article, aside, details, figcaption, figure, footer, header, main, menu, nav, se
 }
 
 a {
-    background-color: transparent
+    background-color: transparent;
+    color: inherit
+}
+
+img {
+    vertical-align: middle;
+    border-style: none
 }
 
 a:active, a:hover {
@@ -27,10 +33,6 @@ a:active, a:hover {
 
 b, strong {
     font-weight: bolder
-}
-
-img {
-    border-style: none
 }
 
 h1 {
@@ -343,4 +345,8 @@ html, body {
     border: none;
     display: block;
     outline: 0
+}
+
+.w3-btn:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
 }
