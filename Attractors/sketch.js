@@ -43,6 +43,7 @@ function resetX() {
 }
 
 function setup() {
+  createP().parent('canvas');
   let canvas = createCanvas(800, 600);
   canvas.parent('canvas');
   createP().parent('canvas');

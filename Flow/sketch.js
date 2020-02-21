@@ -13,8 +13,10 @@ let zoff = 0;
 let cols, rows, particles;
 
 function setup() {
+  createP().parent('canvas');
   let canvas = createCanvas(800, 600);
   canvas.parent('canvas');
+  createP().parent('canvas');
   cols = floor(width/fieldResolution);
   rows = floor(height/fieldResolution);
   colorMode(HSB, 255, 255, 255);
