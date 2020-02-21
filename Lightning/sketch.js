@@ -3,17 +3,17 @@
 
 let tree;
 let walkers;
-let maxWalkers = 400;
-let iterations = 500;
+let maxWalkers = 50;
+let iterations = 200;
 let radius = 6;
 let showAll = true;
-let shrinkage = 0.9975;
+let shrinkage = 0.995;
 let h = 0; //rainbow colors
 //float h = 100; //lightning colors
 
 function setup() {
   createP().parent('canvas');
-  let canvas = createCanvas(800, 600);
+  let canvas = createCanvas(400, 300);
   canvas.parent('canvas');
   createP().parent('canvas');
   colorMode(HSB);
