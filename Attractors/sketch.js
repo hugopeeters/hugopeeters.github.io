@@ -73,21 +73,21 @@ function removeSliders() {
 
 function initSliders() {
   numParticlesSlider = createSlider(100, 5000, round(random(100, 5000)));
-  numParticlesSlider.position(20, height + 20);
+  numParticlesSlider.position(20, height + 220);
   maxSpeedSlider = createSlider(1, 25, random(1, 25), 0.01);
-  maxSpeedSlider.position(20, height + 40);
+  maxSpeedSlider.position(20, height + 240);
   speedSlider = createSlider(0, 3, random(0, 3), 0.01);
-  speedSlider.position(20, height + 60);
+  speedSlider.position(20, height + 260);
   numAttactorsSlider = createSlider(1, 10, round(1, 10));
-  numAttactorsSlider.position(20, height + 80);
+  numAttactorsSlider.position(20, height + 280);
   vinitSlider = createSlider(3, 7, random(3, 7), 0.01);
-  vinitSlider.position(20, height + 100);
+  vinitSlider.position(20, height + 300);
   spreadSlider = createSlider(0, 0.1, random(0, 0.1), 0.0001);
-  spreadSlider.position(20, height + 120);
+  spreadSlider.position(20, height + 320);
   strWSlider = createSlider(1, 16, random(1, 16), 0.1);
-  strWSlider.position(20, height + 140);
+  strWSlider.position(20, height + 340);
   colorOffsetSlider = createSlider(0, 255, random(0, 255));
-  colorOffsetSlider.position(20, height + 160);
+  colorOffsetSlider.position(20, height + 360);
 }
 
 function draw() {
