@@ -43,14 +43,18 @@ function resetX() {
 }
 
 function setup() {
-  createCanvas(1000, 800);
-  initSliders();
+  let canvas = createCanvas(800, 600);
+  canvas.parent('canvas');
+  createP().parent('canvas');
   button = createButton('restart');
-  button.position(20, height + 200);
+  button.parent('canvas');
+  createP().parent('canvas');
   button.mousePressed(resetX);
   rndButton = createButton('random');
-  rndButton.position(80, height + 200);
+  rndButton.parent('canvas');
+  createP().parent('canvas');
   rndButton.mousePressed(randomize);
+  initSliders();
   resetX();
 }
 
@@ -72,22 +76,31 @@ function removeSliders() {
 }
 
 function initSliders() {
+  createP().parent('canvas');
   numParticlesSlider = createSlider(100, 5000, round(random(100, 5000)));
-  numParticlesSlider.position(20, height + 220);
+  numParticlesSlider.parent('canvas');
+  createP().parent('canvas');
   maxSpeedSlider = createSlider(1, 25, random(1, 25), 0.01);
-  maxSpeedSlider.position(20, height + 240);
+  maxSpeedSlider.parent('canvas');
+  createP().parent('canvas');
   speedSlider = createSlider(0, 3, random(0, 3), 0.01);
-  speedSlider.position(20, height + 260);
+  speedSlider.parent('canvas');
+  createP().parent('canvas');
   numAttactorsSlider = createSlider(1, 10, round(1, 10));
-  numAttactorsSlider.position(20, height + 280);
+  numAttactorsSlider.parent('canvas');
+  createP().parent('canvas');
   vinitSlider = createSlider(3, 7, random(3, 7), 0.01);
-  vinitSlider.position(20, height + 300);
+  vinitSlider.parent('canvas');
+  createP().parent('canvas');
   spreadSlider = createSlider(0, 0.1, random(0, 0.1), 0.0001);
-  spreadSlider.position(20, height + 320);
+  spreadSlider.parent('canvas');
+  createP().parent('canvas');
   strWSlider = createSlider(1, 16, random(1, 16), 0.1);
-  strWSlider.position(20, height + 340);
+  strWSlider.parent('canvas');
+  createP().parent('canvas');
   colorOffsetSlider = createSlider(0, 255, random(0, 255));
-  colorOffsetSlider.position(20, height + 360);
+  colorOffsetSlider.parent('canvas');
+  createP().parent('canvas');
 }
 
 function draw() {
