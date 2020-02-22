@@ -139,7 +139,7 @@ class Vehicle {
         vertex(0 + this.r / 3, 0);
         endShape(CLOSE);
         //debugging visuals
-        if (mouseIsPressed || this.best) {
+        if (this.best) {
             noFill();
             ellipseMode(RADIUS);
             stroke(0, 255, 0, 200);
