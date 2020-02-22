@@ -43,7 +43,6 @@ function draw() {
     translate(width / 2, height / 2 + 50);
     rotateX(PI / 3);
     translate(-w / 2, -h / 2);
-
     for (let y = 0; y < rows - 1; y++) {
         beginShape(TRIANGLE_STRIP);
         for (let x = 0; x < cols; x++) {
