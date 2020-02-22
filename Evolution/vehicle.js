@@ -33,7 +33,7 @@ class Vehicle {
         this.vel.add(this.acc);
         this.vel.limit(this.maxVel);
         this.pos.add(this.vel);
-        this.acc.mult(0);
+        this.acc.setMag(0);
         this.health -= 0.01;
         this.age = floor((frameCount - this.birthDate) / FPS);
         this.performance = this.health + this.age * 100;
@@ -73,9 +73,9 @@ class Vehicle {
         let desiredVel = target.pos.copy().sub(this.pos);
         let steeringForce = desiredVel.sub(this.vel);
         if (target.good) {
-            steeringForce.mult(this.dna.goodVel);
+            steeringForce = p5.Vector.mult(steeringForce, this.dna.goodVel);
         } else {
-            steeringForce.mult(this.dna.badVel);
+            steeringForce = p5.Vector.mult(steeringForce, this.dna.badVel);
         }
         steeringForce.limit(this.maxForce);
         applyForce(steeringForce);
@@ -101,8 +101,8 @@ class Vehicle {
     seek(target) {
         let desiredVel = target.pos.copy().sub(this.pos);
         let steeringForce = desiredVel.sub(this.vel);
-        steeringForce.mult(this.dna.otherVel);
-        steeringForce.mult(target.health / this.dna.otherHealth);
+        steeringForce = p5.Vector.mult(steeringForce, this.dna.otherVel);
+        steeringForce = p5.Vector.mult(steeringForce, target.health / this.dna.otherHealth);
         steeringForce.limit(this.maxForce);
         this.applyForce(steeringForce);
     }
