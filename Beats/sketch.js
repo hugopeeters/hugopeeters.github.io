@@ -21,21 +21,31 @@ function setup() {
 function draw() {
     background(51);
     grid.draw();
-    if(playLoop && (frameCount - startFrame) % speed == 0) {
-        console.log("playing something");
-        grid.play(floor((frameCount - startFrame) / speed));
+    if (playLoop) {
+        if ((frameCount - startFrame) % speed == 0) {
+            console.log("tick");
+            grid.play(floor((frameCount - startFrame) / speed));
+        }
+        noFill();
+        stroke(0, 0, 255);
+        strokeWeight(2);
+        let x = leftMargin + ((frameCount - startFrame) * grid.cellWidth / speed) % (width - leftMargin);
+        line(x, 0, x, height);
     }
 }
 
 function mouseClicked() {
-    let col = floor((mouseX - leftMargin) / grid.cellWidth);
-    let row = floor(mouseY / grid.cellHeight);
-    //console.log("r " + row + " c " + col); 
-    playSound(soundNames[row]);
-    grid.toggle(col, row);
+    if (mouseX > leftMargin && mouseX < width && mouseY > 0 && mouseY < height) {
+        let col = floor((mouseX - leftMargin) / grid.cellWidth);
+        let row = floor(mouseY / grid.cellHeight);
+        if (!playLoop) {
+            playSound(soundNames[row]);
+        }
+        grid.toggle(col, row);
+    }
 }
 
-function keyPressed(){
+function keyPressed() {
     playLoop = !playLoop;
     startFrame = frameCount;
     console.log("Playing: " + playLoop);

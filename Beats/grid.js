@@ -48,6 +48,8 @@ class Grid {
         for (let j = 0; j < this.cells[count].length; j++) {
             if (this.cells[count][j]) {
                 playSound(soundNames[j]);
+                console.log("playing " + soundNames[j]);
+                
             }
         }
     }
