@@ -1,7 +1,7 @@
 let logo;
 
 function preload() {
-    logo = loadImage('logo/Eindhoven_ZW_Beeldmerk_BB.png')
+    logo = loadImage('logo/Eindhoven_ZW_Beeldmerk_BB.png');
 }
 
 function setup() {
