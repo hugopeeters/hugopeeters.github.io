@@ -13,7 +13,7 @@ function setup() {
     let canvas = createCanvas(800, 800);
     canvas.parent('canvas');
     createP().parent('canvas');
-    
+
     pxl = new Array(width);
     logo.loadPixels();
     let d = pixelDensity();
@@ -28,7 +28,6 @@ function setup() {
     }
 
     background(52);
-    colorMode(HSB);
     stroke(255);
     strokeWeight(4);
     gravity = createVector(0, 0.2);
@@ -37,7 +36,7 @@ function setup() {
 function draw() {
     background(0);
 
-    if (random(1) < 0.12) {
+    if (random(1) < 0.2) {
         fireworks.push(new Firework());
     }
     for (let i = fireworks.length - 1; i >= 0; i--) {

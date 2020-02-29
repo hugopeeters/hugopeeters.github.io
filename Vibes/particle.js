@@ -32,16 +32,18 @@ class Particle {
         let x = floor(this.pos.x);
         let y = floor(this.pos.y);
         if (x >= 0 && x < width && y >= 0 && y < height) {
-            if (pxl[x][y] != 255) {
-                if (!this.firework) {
-                    strokeWeight(2);
-                    stroke(this.hue, 255, 255, this.lifespan);
-                } else {
-                    strokeWeight(4);
-                    stroke(this.hue, 255, 255);
-                }
-                point(this.pos.x, this.pos.y);
+            if (this.firework) {
+                stroke(255, this.lifespan);
+                strokeWeight(2);
+            } else if (pxl[x][y] != 255) {
+                strokeWeight(4);
+                stroke(255, 0, 0, 100);
+
+            } else {
+                stroke(255, 0, 0, this.lifespan);
+                strokeWeight(24);
             }
+            point(this.pos.x, this.pos.y);
         }
     }
 
