@@ -1,6 +1,8 @@
 let logo;
-let y = 0;
-let red;
+let pxl;
+let x = 0;
+let fireworks = [];
+let gravity;
 
 function preload() {
     logo = loadImage('logo/logo.png');
@@ -11,37 +13,39 @@ function setup() {
     let canvas = createCanvas(800, 800);
     canvas.parent('canvas');
     createP().parent('canvas');
-    red = floor(random(0, 255));
-    console.log(red);
     
-}
-
-function draw() {
-    background(51);
+    pxl = new Array(width);
     logo.loadPixels();
     let d = pixelDensity();
     for (let x = 0; x < width; x++) {
-        let off = (y * width + x) * d * 4;
-        
-        if (logo.pixels[off + 3] == 255) {
-            for (let i = 0; i < d; i++) {
-                logo.pixels[off + i] = red;
-                logo.pixels[off + i + 1] = 0;
-                logo.pixels[off + i + 2] = 0;
-                logo.pixels[off + i + 3] = red;
+        pxl[x] = new Array(height);
+        for (let y = 0; y < height; y++) {
+            let off = (y * width + x) * 4;
+            if (logo.pixels[off + 3] == 255) {
+                pxl[x][y] = 255;
             }
         }
     }
-    logo.updatePixels();
 
-    //draw the image
-    image(logo, 0, 0);
+    background(52);
+    colorMode(HSB);
+    stroke(255);
+    strokeWeight(4);
+    gravity = createVector(0, 0.2);
+}
 
-    y++;
-    if (y >= height) {
-        y = 0;
-        red = floor(random(0, 255));
-        console.log(red);
-        preload();
+function draw() {
+    background(0);
+
+    if (random(1) < 0.12) {
+        fireworks.push(new Firework());
+    }
+    for (let i = fireworks.length - 1; i >= 0; i--) {
+        let f = fireworks[i];
+        f.update();
+        f.show();
+        if (f.done()) {
+            fireworks.splice(i, 1);
+        }
     }
 }
