@@ -6,7 +6,7 @@ class Particle {
         this.lifespan = 255;
         this.pos = createVector(x_, y_);
         if (this.firework) {
-            this.vel = createVector(0, random(-18, -10));
+            this.vel = createVector(0, random(-18, -8));
         } else {
             this.vel = p5.Vector.random2D();
             this.vel.mult(random(4, 16));

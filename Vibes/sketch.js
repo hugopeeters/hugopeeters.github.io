@@ -36,7 +36,7 @@ function setup() {
 function draw() {
     background(0);
 
-    if (random(1) < 0.2) {
+    if (random(1) < 0.3) {
         fireworks.push(new Firework());
     }
     for (let i = fireworks.length - 1; i >= 0; i--) {
