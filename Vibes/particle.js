@@ -33,11 +33,11 @@ class Particle {
         let y = floor(this.pos.y);
         if (x >= 0 && x < width && y >= 0 && y < height) {
             if (this.firework) {
-                stroke(255, this.lifespan);
+                stroke(this.color.levels[0], this.color.levels[1], this.color.levels[2], this.lifespan);
                 strokeWeight(2);
             } else if (pxl[x][y] != 255) {
                 strokeWeight(4);
-                stroke(this.color.levels[0], this.color.levels[1], this.color.levels[2], 100);
+                stroke(this.color.levels[0] - 60, this.color.levels[1] + 40, this.color.levels[2] + 40, 100);
 
             } else {
                 stroke(this.color.levels[0], this.color.levels[1], this.color.levels[2], this.lifespan);
