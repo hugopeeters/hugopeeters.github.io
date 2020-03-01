@@ -1,7 +1,7 @@
 class Particle {
 
-    constructor(x_, y_, f_, h_) {
-        this.hue = h_;
+    constructor(x_, y_, f_, c_) {
+        this.color = c_;
         this.firework = f_;
         this.lifespan = 255;
         this.pos = createVector(x_, y_);
@@ -37,10 +37,10 @@ class Particle {
                 strokeWeight(2);
             } else if (pxl[x][y] != 255) {
                 strokeWeight(4);
-                stroke(255, 0, 0, 100);
+                stroke(this.color.levels[0], this.color.levels[1], this.color.levels[2], 100);
 
             } else {
-                stroke(255, 0, 0, this.lifespan);
+                stroke(this.color.levels[0], this.color.levels[1], this.color.levels[2], this.lifespan);
                 strokeWeight(24);
             }
             point(this.pos.x, this.pos.y);

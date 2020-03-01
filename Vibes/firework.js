@@ -1,8 +1,8 @@
 class Firework {
   
     constructor() {
-      this.hue = floor(random(0, 50));
-      this.firework = new Particle(random(width), height, true, this.hue);
+      this.color = color(floor(random(200, 255)), floor(random(0, 30)), floor(random(0, 30)));
+      this.firework = new Particle(random(width), height, true, this.color);
       this.exploded = false;
       this.particles = [];
     }
@@ -37,7 +37,7 @@ class Firework {
     
     explode(){
       for(let i = 0; i < 200; i++){
-        let p = new Particle(this.firework.pos.x, this.firework.pos.y, false, this.hue);
+        let p = new Particle(this.firework.pos.x, this.firework.pos.y, false, this.color);
         this.particles.push(p);
       }
     } 
