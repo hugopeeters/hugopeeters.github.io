@@ -441,3 +441,23 @@ const s4 = (sketch) => {
 };
 
 let p54 = new p5(s4, 'canvas3');
+
+///RAIN
+const s5 = (sketch) => {
+
+    let logoData;
+
+    sketch.preload = function () {
+        logoData = sketch.loadJSON('logo/vibes.json');
+    }
+    
+    sketch.setup = function() {
+        sketch.createCanvas(800, 800);
+    }
+
+    sketch.draw = function() {
+        sketch.background(52);
+    }
+};
+
+let p55 = new p5(s5, 'canvas5');
