@@ -50,7 +50,7 @@ class Drop {
     let y = floor(this.pos.y);
     if (x >= 0 && x < width && y >= 0 && y < height) {
       if (pxl[x][y]) {
-        stroke(255, 0, 0, 150);
+        stroke(floor(random(200, 255)), floor(random(0, 50)), floor(random(0, 50)), 150);
       } else {
         stroke(220, 220, 255, 150);
       }
