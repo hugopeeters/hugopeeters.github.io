@@ -9,13 +9,15 @@ class Particle {
     }
 
     render() {
-        //noStroke();
-        //fill(frameCount / 10 % 255, 255, 255, 100);
-        //ellipse(pos.x, pos.y, radius, radius);
-        strokeWeight(1);
-        stroke(frameCount / 10 % 255, 255, 255, lineOpacity);
-        //stroke(random(25), 255, 255, lineOpacity);
-        line(this.ppos.x, this.ppos.y, this.pos.x, this.pos.y);
+        let x = floor(this.pos.x);
+        let y = floor(this.pos.y);
+        if (x >= 0 && x < width && y >= 0 && y < height) {
+            if (pxl[x][y] == 255) {
+                strokeWeight(1);
+                stroke(frameCount / 10 % 255, 255, 255, lineOpacity);
+                line(this.ppos.x, this.ppos.y, this.pos.x, this.pos.y);
+            }
+        }
     }
 
     update() {

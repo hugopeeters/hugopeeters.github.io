@@ -1,6 +1,8 @@
+let logo;
+let pxl;
 let fieldResolution = 20;
 let fieldScale = 0.05;
-let changeRate = 0.00005;
+let changeRate = 0.000055;
 let numP = 5000;
 let lineOpacity = 0.075;
 let fieldForce = 1;
@@ -12,9 +14,13 @@ let xoff, yoff;
 let zoff = 0;
 let cols, rows, particles;
 
+function preload() {
+    logo = loadImage('logo/logo.png');
+}
+
 function setup() {
     createP().parent('canvas');
-    let canvas = createCanvas(800, 600);
+    let canvas = createCanvas(800, 800);
     canvas.parent('canvas');
     createP().parent('canvas');
     cols = floor(width / fieldResolution + 2);
@@ -25,6 +31,19 @@ function setup() {
     particles = new Array(numP);
     for (let i = 0; i < numP; i++) {
         particles[i] = new Particle(createVector(random(width), random(height)));
+    }
+
+    pxl = new Array(width);
+    logo.loadPixels();
+    let d = pixelDensity();
+    for (let x = 0; x < width; x++) {
+        pxl[x] = new Array(height);
+        for (let y = 0; y < height; y++) {
+            let off = (y * width + x) * 4;
+            if (logo.pixels[off + 3] == 255) {
+                pxl[x][y] = 255;
+            }
+        }
     }
     background(0);
 }
