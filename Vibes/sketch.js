@@ -1,37 +1,132 @@
-///BLINK
+///FLOW
 const s1 = (sketch) => {
-    let logoData;
-    let scl = 1;
+    let logo;
+    let pxl;
+    let fieldResolution = 20;
+    let fieldScale = 0.05;
+    let changeRate = 0.000055;
+    let numP = 5000;
+    let lineOpacity = 0.075;
+    let fieldForce = 1;
+    let maxVel = 5;
+    let showVectors = false;
+    let flowfield = [];
+
+    let xoff, yoff;
+    let zoff = 0;
+    let cols, rows, particles;
 
     sketch.preload = function () {
-        logoData = sketch.loadJSON('logo/vibes.json');
+        logo = sketch.loadImage('logo/logo.png');
     }
 
     sketch.setup = function () {
-        sketch.createCanvas(scl * 800, scl * 800);
-        sketch.colorMode(sketch.HSB, 360, 255, 255, 255);
+        sketch.createCanvas(800, 800);
+        cols = sketch.floor(sketch.width / fieldResolution + 2);
+        rows = sketch.floor(sketch.height / fieldResolution + 2);
+        sketch.colorMode(sketch.HSB, 255, 255, 255);
+        sketch.rectMode(sketch.CENTER);
+        sketch.ellipseMode(sketch.CENTER);
+        particles = new Array(numP);
+        for (let i = 0; i < numP; i++) {
+            let pos = sketch.createVector(sketch.random(sketch.width), sketch.random(sketch.height));
+            particles[i] = new Particle(pos);
+        }
+
+        pxl = new Array(sketch.width);
+        logo.loadPixels();
+        let d = sketch.pixelDensity();
+        for (let x = 0; x < sketch.width; x++) {
+            pxl[x] = new Array(sketch.height);
+            for (let y = 0; y < sketch.height; y++) {
+                let off = (y * sketch.width + x) * 4;
+                if (logo.pixels[off + 3] == 255) {
+                    pxl[x][y] = 255;
+                }
+            }
+        }
+        sketch.background(0);
     }
 
     sketch.draw = function () {
-        sketch.background(5);
-        if (sketch.random(1) < 0.1) {
-            sketch.changeColors();
-        }
-        for (let v of logoData.vibes) {
-            sketch.beginShape();
-            for (let p of v.points) {
-                sketch.vertex(scl * p.x, scl * p.y);
+        //background(0);
+
+        for (let x = 0; x < cols + 1; x += 1) {
+            flowfield[x] = [];
+            for (let y = 0; y < rows + 1; y += 1) {
+                xoff = x * fieldScale;
+                yoff = y * fieldScale;
+                flowfield[x][y] = p5.Vector.fromAngle(sketch.noise(xoff, yoff, zoff) * sketch.TWO_PI);
+
+                if (showVectors) {
+                    //DRAW VECTORS
+                    sketch.push();
+                    sketch.translate(x * fieldResolution, y * fieldResolution);
+                    sketch.rotate(flowfield[x][y].heading());
+                    sketch.stroke(255, 0.01);
+                    sketch.line(0, 0, fieldResolution * 0.75, 0);
+                    sketch.pop();
+                }
             }
-            sketch.endShape(sketch.CLOSE);
+        }
+        zoff += changeRate;
+
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].render();
+            particles[i].update();
         }
     }
 
-    sketch.changeColors = function () {
-        sketch.fill(sketch.floor(sketch.random(0, 360)), 255, 255, 255);
+    class Particle {
+
+        constructor(pos) {
+            this.pos = pos;
+            this.ppos = pos.copy();
+            this.vel = sketch.createVector(0, 0);
+            this.acc = sketch.createVector(0, 0);
+            this.radius = 2;
+        }
+
+        render() {
+            let x = sketch.floor(this.pos.x);
+            let y = sketch.floor(this.pos.y);
+            if (x >= 0 && x < sketch.width && y >= 0 && y < sketch.height) {
+                if (pxl[x][y] == 255) {
+                    sketch.strokeWeight(1);
+                    sketch.stroke(sketch.frameCount / 10 % 255, 255, 255, lineOpacity);
+                    sketch.line(this.ppos.x, this.ppos.y, this.pos.x, this.pos.y);
+                }
+            }
+        }
+
+        update() {
+            let force = flowfield[sketch.round(this.pos.x / fieldResolution)][sketch.round(this.pos.y / fieldResolution)];
+            force.setMag(fieldForce);
+            this.acc.add(force);
+            this.vel.add(this.acc);
+            this.vel.limit(maxVel);
+            this.ppos = this.pos.copy();
+            this.pos.add(this.vel);
+            if (this.pos.x <= -10) {
+                this.pos.x += sketch.width + 20;
+                this.ppos.x += sketch.width + 20;
+            }
+            if (this.pos.x >= sketch.width + 10) {
+                this.pos.x -= sketch.width + 20;
+                this.ppos.x -= sketch.width + 20;
+            }
+            if (this.pos.y <= -10) {
+                this.pos.y += sketch.height + 20;
+                this.ppos.y += sketch.height + 20;
+            }
+            if (this.pos.y >= sketch.height + 10) {
+                this.pos.y -= sketch.height + 20;
+                this.ppos.y -= sketch.height + 20;
+            }
+            this.acc.setMag(0);
+        }
     }
 };
-
-let p51 = new p5(s1, 'canvas3');
 
 ///FIREWORKS
 const s2 = (sketch) => {
@@ -194,139 +289,38 @@ const s2 = (sketch) => {
     }
 };
 
-let p52 = new p5(s2, 'canvas2');
-
-///FLOW
+///BLINK
 const s3 = (sketch) => {
-    let logo;
-    let pxl;
-    let fieldResolution = 20;
-    let fieldScale = 0.05;
-    let changeRate = 0.000055;
-    let numP = 5000;
-    let lineOpacity = 0.075;
-    let fieldForce = 1;
-    let maxVel = 5;
-    let showVectors = false;
-    let flowfield = [];
-
-    let xoff, yoff;
-    let zoff = 0;
-    let cols, rows, particles;
+    let logoData;
+    let scl = 1;
 
     sketch.preload = function () {
-        logo = sketch.loadImage('logo/logo.png');
+        logoData = sketch.loadJSON('logo/vibes.json');
     }
 
     sketch.setup = function () {
-        sketch.createCanvas(800, 800);
-        cols = sketch.floor(sketch.width / fieldResolution + 2);
-        rows = sketch.floor(sketch.height / fieldResolution + 2);
-        sketch.colorMode(sketch.HSB, 255, 255, 255);
-        sketch.rectMode(sketch.CENTER);
-        sketch.ellipseMode(sketch.CENTER);
-        particles = new Array(numP);
-        for (let i = 0; i < numP; i++) {
-            let pos = sketch.createVector(sketch.random(sketch.width), sketch.random(sketch.height));
-            particles[i] = new Particle(pos);
-        }
-
-        pxl = new Array(sketch.width);
-        logo.loadPixels();
-        let d = sketch.pixelDensity();
-        for (let x = 0; x < sketch.width; x++) {
-            pxl[x] = new Array(sketch.height);
-            for (let y = 0; y < sketch.height; y++) {
-                let off = (y * sketch.width + x) * 4;
-                if (logo.pixels[off + 3] == 255) {
-                    pxl[x][y] = 255;
-                }
-            }
-        }
-        sketch.background(0);
+        sketch.createCanvas(scl * 800, scl * 800);
+        sketch.colorMode(sketch.HSB, 360, 255, 255, 255);
     }
 
     sketch.draw = function () {
-        //background(0);
-
-        for (let x = 0; x < cols + 1; x += 1) {
-            flowfield[x] = [];
-            for (let y = 0; y < rows + 1; y += 1) {
-                xoff = x * fieldScale;
-                yoff = y * fieldScale;
-                flowfield[x][y] = p5.Vector.fromAngle(sketch.noise(xoff, yoff, zoff) * sketch.TWO_PI);
-
-                if (showVectors) {
-                    //DRAW VECTORS
-                    sketch.push();
-                    sketch.translate(x * fieldResolution, y * fieldResolution);
-                    sketch.rotate(flowfield[x][y].heading());
-                    sketch.stroke(255, 0.01);
-                    sketch.line(0, 0, fieldResolution * 0.75, 0);
-                    sketch.pop();
-                }
-            }
+        sketch.background(5);
+        if (sketch.random(1) < 0.1) {
+            sketch.changeColors();
         }
-        zoff += changeRate;
-
-        for (let i = 0; i < particles.length; i++) {
-            particles[i].render();
-            particles[i].update();
+        for (let v of logoData.vibes) {
+            sketch.beginShape();
+            for (let p of v.points) {
+                sketch.vertex(scl * p.x, scl * p.y);
+            }
+            sketch.endShape(sketch.CLOSE);
         }
     }
 
-    class Particle {
-
-        constructor(pos) {
-            this.pos = pos;
-            this.ppos = pos.copy();
-            this.vel = sketch.createVector(0, 0);
-            this.acc = sketch.createVector(0, 0);
-            this.radius = 2;
-        }
-
-        render() {
-            let x = sketch.floor(this.pos.x);
-            let y = sketch.floor(this.pos.y);
-            if (x >= 0 && x < sketch.width && y >= 0 && y < sketch.height) {
-                if (pxl[x][y] == 255) {
-                    sketch.strokeWeight(1);
-                    sketch.stroke(sketch.frameCount / 10 % 255, 255, 255, lineOpacity);
-                    sketch.line(this.ppos.x, this.ppos.y, this.pos.x, this.pos.y);
-                }
-            }
-        }
-
-        update() {
-            let force = flowfield[sketch.round(this.pos.x / fieldResolution)][sketch.round(this.pos.y / fieldResolution)];
-            force.setMag(fieldForce);
-            this.acc.add(force);
-            this.vel.add(this.acc);
-            this.vel.limit(maxVel);
-            this.ppos = this.pos.copy();
-            this.pos.add(this.vel);
-            if (this.pos.x <= -10) {
-                this.pos.x += sketch.width + 20;
-                this.ppos.x += sketch.width + 20;
-            }
-            if (this.pos.x >= sketch.width + 10) {
-                this.pos.x -= sketch.width + 20;
-                this.ppos.x -= sketch.width + 20;
-            }
-            if (this.pos.y <= -10) {
-                this.pos.y += sketch.height + 20;
-                this.ppos.y += sketch.height + 20;
-            }
-            if (this.pos.y >= sketch.height + 10) {
-                this.pos.y -= sketch.height + 20;
-                this.ppos.y -= sketch.height + 20;
-            }
-            this.acc.setMag(0);
-        }
+    sketch.changeColors = function () {
+        sketch.fill(sketch.floor(sketch.random(0, 360)), 255, 255, 255);
     }
 };
-
-let p53 = new p5(s3, 'canvas1');
 
 ///RAIN
 const s4 = (sketch) => {
@@ -440,24 +434,79 @@ const s4 = (sketch) => {
     }
 };
 
-let p54 = new p5(s4, 'canvas3');
-
-///RAIN
+///NEW
 const s5 = (sketch) => {
 
     let logoData;
+    let particles;
 
     sketch.preload = function () {
         logoData = sketch.loadJSON('logo/vibes.json');
     }
-    
-    sketch.setup = function() {
+
+    sketch.setup = function () {
         sketch.createCanvas(800, 800);
+        particles = new Array(3);
+        for (let i = 0; i < particles.length; i++) {
+            particles[i] = new Particle(i);
+        }
     }
 
-    sketch.draw = function() {
+    sketch.draw = function () {
         sketch.background(52);
+        sketch.noStroke();
+        for (let v of logoData.vibes) {
+            sketch.beginShape();
+            for (let p of v.points) {
+                sketch.vertex(p.x, p.y);
+            }
+            sketch.endShape(sketch.CLOSE);
+        }
+        for (let p of particles) {
+            p.show();
+            p.update();
+        }
+    }
+
+    class Particle {
+
+        constructor(v) {
+            this.vibeIndex = v;
+            this.speed = 1;
+            this.index = 0;
+            this.pos = sketch.createVector(logoData.vibes[this.vibeIndex].points[this.index].x, logoData.vibes[this.vibeIndex].points[this.index].y);
+            this.nextIndex = (this.index + 1) % logoData.vibes[this.vibeIndex].points.length;
+            this.posNext = sketch.createVector(logoData.vibes[this.vibeIndex].points[this.nextIndex].x, logoData.vibes[this.vibeIndex].points[this.nextIndex].y);
+            this.path = p5.Vector.sub(this.posNext, this.pos);
+            this.distance = this.path.mag();
+            this.direction = this.path.normalize();
+        }
+
+        update() {
+            this.pos.add(this.direction.mult(this.speed));
+            this.path = p5.Vector.sub(this.posNext, this.pos);
+            this.distance = this.path.mag();
+            if (this.distance < this.speed) {
+                this.index++;
+                this.nextIndex = (this.index + 1) % logoData.vibes[this.vibeIndex].points.length;
+                this.posNext = sketch.createVector(logoData.vibes[this.vibeIndex].points[this.nextIndex].x, logoData.vibes[this.vibeIndex].points[this.nextIndex].y);
+                this.path = p5.Vector.sub(this.posNext, this.pos);
+                this.distance = this.path.mag();
+            }
+            this.direction = this.path.normalize();
+        }
+
+        show() {
+            sketch.stroke(255, 0, 0);
+            sketch.strokeWeight(4);
+            sketch.point(this.pos.x, this.pos.y);
+        }
     }
 };
 
+// Assign p5 instances to DIVs
+let p51 = new p5(s1, 'canvas1');
+let p52 = new p5(s2, 'canvas2');
+let p53 = new p5(s3, 'canvas3');
+let p54 = new p5(s4, 'canvas4');
 let p55 = new p5(s5, 'canvas5');
