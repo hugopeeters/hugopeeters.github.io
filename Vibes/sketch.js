@@ -75,6 +75,9 @@ const s1 = (sketch) => {
             particles[i].render();
             particles[i].update();
         }
+        if ( zoff > 0.0055) {
+            sketch.noLoop();
+        }
     }
 
     class Particle {
@@ -93,7 +96,7 @@ const s1 = (sketch) => {
             if (x >= 0 && x < sketch.width && y >= 0 && y < sketch.height) {
                 if (pxl[x][y] == 255) {
                     sketch.strokeWeight(1);
-                    sketch.stroke(sketch.frameCount / 10 % 255, 255, 255, lineOpacity);
+                    sketch.stroke(100 + sketch.frameCount / 10 % 255, 255, 255, lineOpacity);
                     sketch.line(this.ppos.x, this.ppos.y, this.pos.x, this.pos.y);
                 }
             }
@@ -179,7 +182,7 @@ const s2 = (sketch) => {
     class Firework {
 
         constructor() {
-            this.color = sketch.color(sketch.floor(sketch.random(200, 255)), sketch.floor(sketch.random(0, 30)), sketch.floor(sketch.random(0, 30)));
+            this.color = sketch.color(sketch.floor(sketch.random(200, 255)), sketch.floor(sketch.random(200, 230)), sketch.floor(sketch.random(0, 30)));
             this.firework = new Particle(sketch.random(sketch.width), sketch.height, true, this.color);
             this.exploded = false;
             this.particles = [];
@@ -423,7 +426,7 @@ const s4 = (sketch) => {
             let y = sketch.floor(this.pos.y);
             if (x >= 0 && x < sketch.width && y >= 0 && y < sketch.height) {
                 if (pxl[x][y]) {
-                    sketch.stroke(sketch.floor(sketch.random(200, 255)), sketch.floor(sketch.random(0, 50)), sketch.floor(sketch.random(0, 50)), 150);
+                    sketch.stroke(sketch.floor(sketch.random(210, 215)), sketch.floor(sketch.random(10, 15)), sketch.floor(sketch.random(100, 150)), 150);
                 } else {
                     sketch.stroke(220, 220, 255, 150);
                 }
@@ -434,11 +437,13 @@ const s4 = (sketch) => {
     }
 };
 
-///NEW
+///CHASERS
 const s5 = (sketch) => {
 
     let logoData;
-    let particles;
+    let vibes;
+    let numPoints = 100;
+    let myIndex = 0;
 
     sketch.preload = function () {
         logoData = sketch.loadJSON('logo/vibes.json');
@@ -446,15 +451,37 @@ const s5 = (sketch) => {
 
     sketch.setup = function () {
         sketch.createCanvas(800, 800);
-        particles = new Array(3);
-        for (let i = 0; i < particles.length; i++) {
-            particles[i] = new Particle(i);
+
+        // create an array to hold a list of coordinates for each path
+        vibes = new Array(3);
+        for (let i = 0; i < logoData.vibes.length; i++) {
+            vibes[i] = [];
+            for (let j = 0; j < logoData.vibes[i].points.length; j++) {
+                let point = sketch.createVector(logoData.vibes[i].points[j].x, logoData.vibes[i].points[j].y);
+                let nextIndex = j + 1;
+                if (nextIndex == logoData.vibes[i].points.length) {
+                    nextIndex = 0;
+                }
+                let next = sketch.createVector(logoData.vibes[i].points[nextIndex].x, logoData.vibes[i].points[nextIndex].y);
+                let diff = p5.Vector.sub(next, point);
+                let inc = diff.setMag(diff.mag() / numPoints);
+
+                for (let k = 0; k < numPoints; k++) {
+                    vibes[i].push(point.copy());
+                    point.add(inc);
+                }
+            }
         }
+
     }
 
     sketch.draw = function () {
+
+        // draw the filled-in background shapes
         sketch.background(52);
-        sketch.noStroke();
+        sketch.fill(100, 50, 200, 100);
+        sketch.strokeWeight(4);
+        sketch.stroke(0);
         for (let v of logoData.vibes) {
             sketch.beginShape();
             for (let p of v.points) {
@@ -462,45 +489,21 @@ const s5 = (sketch) => {
             }
             sketch.endShape(sketch.CLOSE);
         }
-        for (let p of particles) {
-            p.show();
-            p.update();
-        }
-    }
 
-    class Particle {
-
-        constructor(v) {
-            this.vibeIndex = v;
-            this.speed = 1;
-            this.index = 0;
-            this.pos = sketch.createVector(logoData.vibes[this.vibeIndex].points[this.index].x, logoData.vibes[this.vibeIndex].points[this.index].y);
-            this.nextIndex = (this.index + 1) % logoData.vibes[this.vibeIndex].points.length;
-            this.posNext = sketch.createVector(logoData.vibes[this.vibeIndex].points[this.nextIndex].x, logoData.vibes[this.vibeIndex].points[this.nextIndex].y);
-            this.path = p5.Vector.sub(this.posNext, this.pos);
-            this.distance = this.path.mag();
-            this.direction = this.path.normalize();
-        }
-
-        update() {
-            this.pos.add(this.direction.mult(this.speed));
-            this.path = p5.Vector.sub(this.posNext, this.pos);
-            this.distance = this.path.mag();
-            if (this.distance < this.speed) {
-                this.index++;
-                this.nextIndex = (this.index + 1) % logoData.vibes[this.vibeIndex].points.length;
-                this.posNext = sketch.createVector(logoData.vibes[this.vibeIndex].points[this.nextIndex].x, logoData.vibes[this.vibeIndex].points[this.nextIndex].y);
-                this.path = p5.Vector.sub(this.posNext, this.pos);
-                this.distance = this.path.mag();
-            }
-            this.direction = this.path.normalize();
-        }
-
-        show() {
-            sketch.stroke(255, 0, 0);
+        // draw the chasers
+        sketch.stroke(150, 200, 50);
+        for (let a = 0; a < 3; a++) {
+            let myIndexPlus10 = (100 * a + myIndex + 10) % 1199;
+            let myIndexPlus20 = (100 * a + myIndex + 25) % 1199;
+            myIndex = (100 * a + myIndex) % 1199;
             sketch.strokeWeight(4);
-            sketch.point(this.pos.x, this.pos.y);
+            sketch.point(vibes[a][myIndex].x, vibes[a][myIndex].y);
+            sketch.strokeWeight(8);
+            sketch.point(vibes[a][myIndexPlus10].x, vibes[a][myIndexPlus10].y);
+            sketch.strokeWeight(12);
+            sketch.point(vibes[a][myIndexPlus20].x, vibes[a][myIndexPlus20].y);
         }
+        myIndex = (sketch.frameCount * 20) % 1199;
     }
 };
 
