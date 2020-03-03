@@ -34,7 +34,7 @@ function draw() {
         yoff += 0.075;
     }
     background(75, 75, 255);
-    translate(width / 2, height / 2 + 50);
+    translate(width / 2, height / 2);
     rotateX(PI / 3);
     translate(-w / 2, -h / 2);
     ambientLight(255);
