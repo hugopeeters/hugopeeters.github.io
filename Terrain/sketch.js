@@ -1,10 +1,9 @@
 let cols, rows;
-let scl = 40;
-let w = 3200;
-let h = 3200;
+let scl = 10;
 let terrain = [];
 
 let flying = 0;
+let xSlider;
 
 function setup() {
     createP().parent('canvas');
@@ -12,12 +11,15 @@ function setup() {
     canvas.parent('canvas');
     createP().parent('canvas');
 
-    cols = w / scl;
-    rows = h / scl;
+    cols = width / scl;
+    rows = height / scl;
     terrain = new Array(cols);
-    for (let i = 0; i < cols; i++) {
+    for (let i = 0; i < cols + 1; i++) {
         terrain[i] = new Array(rows);
     }
+
+    xSlider = createSlider(-1, 1, 0, 0.01);
+    xSlider.parent('canvas');
 }
 
 function draw() {
@@ -26,23 +28,20 @@ function draw() {
 
     let yoff = flying;
     for (let y = 0; y < rows; y++) {
-        let xoff = 0;
-        for (let x = 0; x < cols; x++) {
-            terrain[x][y] = map(noise(xoff, yoff), 0, 1, -300, 300);
+        let xoff = xSlider.value();
+        for (let x = 0; x < cols + 1; x++) {
+            terrain[x][y] = map(noise(xoff, yoff), 0, 1, -100, 100);
             xoff += 0.075;
         }
         yoff += 0.075;
     }
+    
     background(75, 75, 255);
-    translate(width / 2, height / 2);
+    translate(-width / 2, -height / 4);
     rotateX(PI / 3);
-    translate(-w / 2, -h / 2);
-    ambientLight(255);
-    //directionalLight(255, 1, -1, 10000);
-    specularMaterial(180, 180, 160);
-    for (let y = 0; y < rows - 1; y++) {
-        beginShape(TRIANGLE_STRIP);
-        for (let x = 0; x < cols; x++) {
+    for (let y = 0; y < rows; y++) {
+        beginShape(LINES);
+        for (let x = 0; x < cols + 1; x++) {
             vertex(x * scl, y * scl, terrain[x][y]);
             vertex(x * scl, (y + 1) * scl, terrain[x][y + 1]);
         }
