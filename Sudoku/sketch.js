@@ -1,7 +1,8 @@
 let cellWidth, cellHeight;
 let sudoku;
-let btn;
+let btn, cb;
 let selectedValue = 0;
+let revealMistakes = false;
 
 function setup() {
 
@@ -19,6 +20,10 @@ function setup() {
         btn.mousePressed(setVal);
     }
 
+    cb = createCheckbox("reveal mistakes");
+    cb.parent('canvas');
+
+
     cellWidth = width / 9;
     cellHeight = height / 9;
 
@@ -27,6 +32,7 @@ function setup() {
 
 function draw() {
     background(255);
+    revealMistakes = cb.checked();
     sudoku.render();
 }
 

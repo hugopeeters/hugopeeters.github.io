@@ -43,8 +43,12 @@ class Sudoku {
                 strokeWeight(1);
                 rect(cellWidth * x, cellHeight * y, cellWidth, cellHeight);
 
+                let c = color(0, 0, 0);
+                if (this.cells[y][x].value != this.solution[y][x] && revealMistakes) {
+                    c = color(255, 0, 0);
+                }
                 // draw the cell values
-                this.cells[y][x].render();
+                this.cells[y][x].render(c);
             }
         }
 

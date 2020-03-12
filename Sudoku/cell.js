@@ -5,9 +5,9 @@ class Cell {
         this.pos = createVector(x, y);
     }
 
-    render() {
+    render(c) {
         // draw known cell values
-        fill(0);
+        fill(c);
         noStroke();
         textSize(cellHeight / 2);
         textAlign(CENTER, CENTER);
