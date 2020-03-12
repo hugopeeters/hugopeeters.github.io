@@ -23,6 +23,14 @@ class Sudoku {
             [0, 0, 5, 0, 0, 2, 7, 6, 0],
             [0, 0, 0, 0, 4, 0, 3, 5, 0]
         ];
+
+        this.cells = new Array(9);
+        for (let y = 0; y < this.data.length; y++) {
+            this.cells[y] = new Array(9);
+            for (let x = 0; x < this.data[y].length; x++) {
+                this.cells[y][x] = new Cell(this.data[y][x], cellWidth * (0.5 + x), cellHeight * (0.5 + y));
+            }
+        }
     }
 
     render() {
@@ -33,16 +41,10 @@ class Sudoku {
                 noFill();
                 stroke(0);
                 strokeWeight(1);
-                rect(cellWidth * (x), cellHeight * (y), cellWidth, cellHeight);
+                rect(cellWidth * x, cellHeight * y, cellWidth, cellHeight);
 
-                // draw known cell values
-                fill(0);
-                noStroke();
-                textSize(cellHeight / 2);
-                textAlign(CENTER, CENTER);
-                if (this.data[y][x] != 0) {
-                    text(this.data[y][x], cellWidth * (0.5 + x), cellHeight * (0.5 + y));
-                }
+                // draw the cell values
+                this.cells[y][x].render();
             }
         }
 
@@ -54,6 +56,14 @@ class Sudoku {
             for (let y = 0; y < 3; y++) {
                 rect(cellWidth * (3 * x), cellHeight * (3 * y), 3 * cellWidth, 3 * cellHeight);
             }
+        }
+    }
+
+    setCell(y, x, val) {
+
+        // make sure you cannot change the values that are already filled in
+        if(this.data[y][x] == 0) {
+            this.cells[y][x].set(val);
         }
     }
 }
