@@ -1,8 +1,10 @@
-let cellWidth, cellHeight;
+let cellSize;
 let sudoku;
-let btn, cb;
+let btn, cbMistakes, cbHighlight;
 let selectedValue = 0;
 let revealMistakes = false;
+let highlight = false;
+let sudokuSize = 9;
 
 function setup() {
 
@@ -13,32 +15,34 @@ function setup() {
     createP().parent('canvas');
 
     // create buttons
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i <= sudokuSize; i++) {
         btn = createButton(`${i}`, `${i}`);
         btn.parent('canvas');
         btn.class('btn-unselected');
         btn.mousePressed(setVal);
     }
 
-    cb = createCheckbox("reveal mistakes");
-    cb.parent('canvas');
+    cbMistakes = createCheckbox("reveal mistakes");
+    cbMistakes.parent('canvas');
 
+    cbHighlight = createCheckbox("highlight");
+    cbHighlight.parent('canvas');
 
-    cellWidth = width / 9;
-    cellHeight = height / 9;
+    cellSize = width / sudokuSize;
 
     sudoku = new Sudoku();
 }
 
 function draw() {
     background(255);
-    revealMistakes = cb.checked();
+    revealMistakes = cbMistakes.checked();
+    highlight = cbHighlight.checked();
     sudoku.render();
 }
 
 function setVal() {
     selectedValue = this.value();
-    let a = document.getElementsByClassName('btn-selected'); //[0].class('btn-unselected');
+    let a = document.getElementsByClassName('btn-selected');
     for (let b of a) {
         b.className = 'btn-unselected';
     }
@@ -48,9 +52,9 @@ function setVal() {
 }
 
 function mouseClicked() {
-    let _x = floor(mouseX / cellWidth);
-    let _y = floor(mouseY / cellHeight);
-    if (_x >= 0 && _x <= 8 && _y >= 0 && _y <= 8) {
+    let _x = floor(mouseX / cellSize);
+    let _y = floor(mouseY / cellSize);
+    if (_x >= 0 && _x < sudokuSize && _y >= 0 && _y < sudokuSize) {
         sudoku.setCell(_y, _x, selectedValue);
     } 
 }

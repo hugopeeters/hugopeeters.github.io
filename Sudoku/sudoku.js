@@ -24,11 +24,11 @@ class Sudoku {
             [0, 0, 0, 0, 4, 0, 3, 5, 0]
         ];
 
-        this.cells = new Array(9);
-        for (let y = 0; y < this.data.length; y++) {
-            this.cells[y] = new Array(9);
-            for (let x = 0; x < this.data[y].length; x++) {
-                this.cells[y][x] = new Cell(this.data[y][x], cellWidth * (0.5 + x), cellHeight * (0.5 + y));
+        this.cells = new Array(sudokuSize);
+        for (let y = 0; y < sudokuSize; y++) {
+            this.cells[y] = new Array(sudokuSize);
+            for (let x = 0; x < sudokuSize; x++) {
+                this.cells[y][x] = new Cell(this.data[y][x], x, y);
             }
         }
     }
@@ -36,19 +36,14 @@ class Sudoku {
     render() {
 
         // draw 9x9 cells
-        for (let y = 0; y < this.data.length; y++) {
-            for (let x = 0; x < this.data[y].length; x++) {
-                noFill();
-                stroke(0);
-                strokeWeight(1);
-                rect(cellWidth * x, cellHeight * y, cellWidth, cellHeight);
+        for (let y = 0; y < sudokuSize; y++) {
+            for (let x = 0; x < sudokuSize; x++) {
+                
+                // draw the cells
+                this.cells[y][x].renderCell();
 
-                let c = color(0, 0, 0);
-                if (this.cells[y][x].value != this.solution[y][x] && revealMistakes) {
-                    c = color(255, 0, 0);
-                }
                 // draw the cell values
-                this.cells[y][x].render(c);
+                this.cells[y][x].renderValue();
             }
         }
 
@@ -58,7 +53,7 @@ class Sudoku {
         strokeWeight(3);
         for (let x = 0; x < 3; x++) {
             for (let y = 0; y < 3; y++) {
-                rect(cellWidth * (3 * x), cellHeight * (3 * y), 3 * cellWidth, 3 * cellHeight);
+                rect(cellSize * 3 * x, cellSize * 3 * y, 3 * cellSize, 3 * cellSize);
             }
         }
     }
