@@ -22,11 +22,11 @@ function setup() {
         btn.mousePressed(setVal);
     }
 
+    cbHighlight = createCheckbox("highlight helper");
+    cbHighlight.parent('canvas');
+
     cbMistakes = createCheckbox("reveal mistakes");
     cbMistakes.parent('canvas');
-
-    cbHighlight = createCheckbox("highlight");
-    cbHighlight.parent('canvas');
 
     cellSize = width / sudokuSize;
 
@@ -46,7 +46,7 @@ function setVal() {
     for (let b of a) {
         b.className = 'btn-unselected';
     }
-    
+
     this.class('btn-selected');
     return selectedValue;
 }
@@ -56,5 +56,5 @@ function mouseClicked() {
     let _y = floor(mouseY / cellSize);
     if (_x >= 0 && _x < sudokuSize && _y >= 0 && _y < sudokuSize) {
         sudoku.setCell(_y, _x, selectedValue);
-    } 
+    }
 }
