@@ -15,6 +15,7 @@ class Route {
                 strokeWeight(4);
                 line(this.stations[i-1].x, this.stations[i-1].y, this.stations[i].x, this.stations[i].y);
             }
+            line(this.stations[this.stations.length - 1].x, this.stations[this.stations.length - 1].y, this.stations[0].x, this.stations[0].y)
         }
     }
 }

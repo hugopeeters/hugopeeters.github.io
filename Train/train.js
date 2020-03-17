@@ -7,7 +7,7 @@ class Train {
         this.nextStation = this.route.stations[this.stationIndex + 1];
         this.pos = createVector(this.previousStation.x, this.previousStation.y)
         this.direction = createVector(this.nextStation.x, this.nextStation.y).sub(this.pos);
-        this.step = this.direction.copy().setMag(1);
+        this.step = this.direction.copy().setMag(speed);
     }
 
     show() {
@@ -26,10 +26,18 @@ class Train {
                 this.stationIndex++;
                 this.previousStation = this.route.stations[this.stationIndex];
                 this.nextStation = this.route.stations[this.stationIndex + 1];
-                this.direction = createVector(this.nextStation.x, this.nextStation.y).sub(this.pos);
-                this.step = this.direction.copy().setMag(1);
+            } else if (this.stationIndex == this.route.stations.length - 2) {
+                this.stationIndex++;
+                this.previousStation = this.route.stations[this.stationIndex];
+                this.nextStation = this.route.stations[0];
+            } else {
+                this.stationIndex = 0;
+                this.previousStation = this.route.stations[this.stationIndex];
+                this.nextStation = this.route.stations[this.stationIndex + 1];
             }
+
+            this.direction = createVector(this.nextStation.x, this.nextStation.y).sub(this.pos);
+            this.step = this.direction.copy().setMag(speed);
         }
     }
-
 }

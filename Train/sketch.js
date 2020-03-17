@@ -3,6 +3,7 @@ let stationSize = 16;
 let margin;
 let route;
 let train;
+let speed = 3;
 
 function setup() {
     createP().parent('canvas');
@@ -15,12 +16,13 @@ function setup() {
     stations.push(new Station);
     stations.push(new Station);
     stations.push(new Station);
+    stations.push(new Station);
+    stations.push(new Station);
 
     route = new Route();
-    route.addStation(stations[0]);
-    route.addStation(stations[1]);
-    route.addStation(stations[2]);
-
+    for (let s of stations) {
+        route.addStation(s);
+    }
     train = new Train(route);
 }
 
