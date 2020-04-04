@@ -13,7 +13,7 @@ class Train {
     show() {
         noStroke();
         fill(255, 0, 0);
-        rect(this.pos.x, this.pos.y, 8, 8);
+        rect(this.pos.x, this.pos.y, 18, 18);
     }
 
     update() {
