@@ -34,6 +34,7 @@ class Tile {
         translate(x, y);
         noFill();
         stroke(100);
+        strokeWeight(1);
         rect(-width / 14, -height / 14, width / 7, height / 7);
         pop();
     }
@@ -72,7 +73,7 @@ class Tile {
             if (this.hidden) {
                 noStroke();
                 fill(73, 128, 28); //dark green
-                rect(6 - width / 14, 6 - height / 14, width / 7 - 12, height / 7 - 12);
+                rect(5 - width / 14, 5 - height / 14, width / 7 - 10, height / 7 - 10);
             }
             else {
                 //tile background
@@ -87,7 +88,7 @@ class Tile {
                     fill(109, 166, 63); //medium green
                 }
                 noStroke();
-                rect(6 - width / 14, 6 - height / 14, width / 7 - 12, height / 7 - 12);
+                rect(5 - width / 14, 5 - height / 14, width / 7 - 10, height / 7 - 10);
                 //tile text
                 rotate(this.orientation * TWO_PI / 4);
                 noStroke();

@@ -6,6 +6,7 @@ let activePlayer = 'Humans'; //Humans start the game
 let scoreHumans = 0;
 let scoreAnimals = 0;
 let finalPhase = false;
+let offBoardDirection;
 
 function setup() {
     createP().parent('canvas');
@@ -38,6 +39,14 @@ function setup() {
 
 function draw() {
     background(51);
+    //exits
+    noFill()
+    stroke(150);
+    strokeWeight(16);
+    line(0, 3 * height / 7 + 8, 0, 4 * height / 7 - 8);
+    line(width, 3 * height / 7 + 8, width, 4 * height / 7 - 8);
+    line(3 * width / 7 + 8, 0, 4 * width / 7 - 8, 0);
+    line(3 * width / 7 + 8, height, 4 * width / 7 - 8, height);
 
     for (tile of tileArray) {
         if (tile != 0) {
@@ -73,16 +82,24 @@ function draw() {
     if (beginTileIndex && endTileIndex) {
         if (beginTileIndex == endTileIndex) {
             tileClicked(beginTileIndex);
+        } else if (beginTileIndex && offBoardDirection) {
+            if (finalPhase) {
+                tileDraggedOffBoard(beginTileIndex, offBoardDirection)
+            } else {
+                console.log("tried to move off board, but not in final phase");
+
+            }
         } else {
             tileDragged(beginTileIndex, endTileIndex);
         }
         //reset indices
         beginTileIndex = null;
         endTileIndex = null;
+        offBoardDirection = null;
     }
 
     //debugging info
-    //document.getElementsByClassName('p')[0].innerHTML = idx + " - " + startingTileIdx + " - " + hoverTileIdx;
+    document.getElementsByClassName('p')[0].innerHTML = idx + " - " + beginTileIndex + " - " + endTileIndex + " - " + offBoardDirection;
 
     //game info
     document.getElementsByClassName('p1')[0].innerHTML = "Active Player: " + activePlayer + "</br>Humans: " + scoreHumans + " - Animals: " + scoreAnimals;
@@ -207,6 +224,27 @@ function executeMove(t1, t2) {
     endTurn();
 }
 
+function tileDraggedOffBoard(t1, direction) {
+    //console.log("dragged tile " + t1 + " to tile " + t2);
+
+    let tile = tileArray[t1];
+
+    //make sure the player is allowed to use this tile
+    if (
+        ((tile.type == "bear" || tile.type == "fox") && activePlayer == "Animals") ||
+        ((tile.type == "hunter -->" || tile.type == "lumberjack") && activePlayer == "Humans") ||
+        (tile.type == "duck" || tile.type == "feasant")
+    ) {
+        //check alignment with exit
+
+
+
+
+
+
+    }
+}
+
 function attack(attacker, prey) {
     //CHECK IF ATTACK IS POSSIBLE
     if (validateMove(attacker, prey)) {
@@ -255,6 +293,16 @@ function mousePressed() {
 function mouseReleased() {
     //console.log("RELEASED at " + idx);
     endTileIndex = idx;
+
+    if (mouseY < 0 && mouseX > 0 && mouseX < width) {
+        offBoardDirection = 0; //UP
+    } else if (mouseX > width && mouseY > 0 && mouseY < height) {
+        offBoardDirection = 1; //RIGHT
+    } else if (mouseY > height && mouseX > 0 && mouseX < width) {
+        offBoardDirection = 2; //DOWN
+    } else if (mouseX < 0 && mouseY > 0 && mouseY < height) {
+        offBoardDirection = 3; //LEFT
+    }
 }
 
 function endTurn() {
