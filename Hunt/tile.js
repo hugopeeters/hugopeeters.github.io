@@ -17,6 +17,7 @@ class Tile {
         this.orientation = target.orientation;
         this.hidden = target.hidden;
         this.exists = target.exists;
+        this.value = target.value;
     }
 
     clear() {
@@ -25,29 +26,32 @@ class Tile {
         this.orientation = null;
         this.hidden = false;
         this.exists = false;
+        this.value = 0;
     }
 
     drawBoard() {
-        push();
-        let x = (this.i + 0.5) * width / 7;
-        let y = (this.j + 0.5) * height / 7;
-        translate(x, y);
-        noFill();
-        stroke(100);
-        strokeWeight(1);
-        rect(-width / 14, -height / 14, width / 7, height / 7);
-        pop();
+        if (this.idx < 49) {
+            push();
+            let x = (this.i + 0.5) * width / 7;
+            let y = (this.j + 0.5) * height / 7;
+            translate(x, y);
+            noFill();
+            stroke(100);
+            strokeWeight(1);
+            rect(-width / 14, -height / 14, width / 7, height / 7);
+            pop();
+        }
     }
 
     draw() {
-        if (this.type != '') {
+        if (this.type != '' && this.idx < 49) {
             push();
             let x = (this.i + 0.5) * width / 7;
             let y = (this.j + 0.5) * height / 7;
             translate(x, y);
             //tile edge
             if (
-                (this.idx == idx && !mouseIsPressed || mouseIsPressed && this.idx == beginTileIndex) && 
+                (this.idx == idx && !mouseIsPressed || mouseIsPressed && this.idx == beginTileIndex) &&
                 (
                     (
                         (

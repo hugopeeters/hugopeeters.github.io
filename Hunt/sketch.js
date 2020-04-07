@@ -1,12 +1,12 @@
 let tileArray = []; //really the array of places on the board, so empty places are tiles with .exist == false
 let p, p1;
-let idx;
+let idx, idxOff;
 let beginTileIndex, endTileIndex;
 let activePlayer = 'Humans'; //Humans start the game
 let scoreHumans = 0;
 let scoreAnimals = 0;
 let finalPhase = false;
-let offBoardDirection;
+let finalPhaseCountdown = 10;
 
 function setup() {
     createP().parent('canvas');
@@ -31,6 +31,20 @@ function setup() {
         }
     });
 
+    //add four tiles for the exits
+    tileArray.push(new Tile(3, -1, 'exit', 0));
+    tileArray[49].idx = 49;
+    tileArray[49].hidden = false;
+    tileArray.push(new Tile(7, 3, 'exit', 0));
+    tileArray[50].idx = 50;
+    tileArray[50].hidden = false;
+    tileArray.push(new Tile(3, 7, 'exit', 0));
+    tileArray[51].idx = 51;
+    tileArray[51].hidden = false;
+    tileArray.push(new Tile(-1, 3, 'exit', 0));
+    tileArray[52].idx = 52;
+    tileArray[52].hidden = false;
+
     //sort the tileArray by idx so that we can use it easily
     tileArray.sort((a, b) => a.idx - b.idx);
 
@@ -39,6 +53,7 @@ function setup() {
 
 function draw() {
     background(51);
+
     //exits
     noFill()
     stroke(150);
@@ -76,34 +91,42 @@ function draw() {
         let i = floor(mouseX / (width / 7));
         let j = floor(mouseY / (height / 7));
         idx = 7 * j + i;
+    } else if (mouseY < 0 && mouseX > 0 && mouseX < width) {
+        idx = 49; //UP
+    } else if (mouseX > width && mouseY > 0 && mouseY < height) {
+        idx = 50; //RIGHT
+    } else if (mouseY > height && mouseX > 0 && mouseX < width) {
+        idx = 51; //DOWN
+    } else if (mouseX < 0 && mouseY > 0 && mouseY < height) {
+        idx = 52; //LEFT
+    } else {
+        console.log("mouse is out of bounds");
+        idx = null;
     }
 
     //check if a click or drag has been completed
-    if (beginTileIndex && endTileIndex) {
+    if (beginTileIndex != null && endTileIndex != null && finalPhaseCountdown > 0) {
         if (beginTileIndex == endTileIndex) {
             tileClicked(beginTileIndex);
-        } else if (beginTileIndex && offBoardDirection) {
-            if (finalPhase) {
-                tileDraggedOffBoard(beginTileIndex, offBoardDirection)
-            } else {
-                console.log("tried to move off board, but not in final phase");
-
-            }
         } else {
             tileDragged(beginTileIndex, endTileIndex);
         }
         //reset indices
         beginTileIndex = null;
         endTileIndex = null;
-        offBoardDirection = null;
     }
 
     //debugging info
-    document.getElementsByClassName('p')[0].innerHTML = idx + " - " + beginTileIndex + " - " + endTileIndex + " - " + offBoardDirection;
+    //document.getElementsByClassName('p')[0].innerHTML = idx + " - " + beginTileIndex + " - " + endTileIndex;
 
     //game info
-    document.getElementsByClassName('p1')[0].innerHTML = "Active Player: " + activePlayer + "</br>Humans: " + scoreHumans + " - Animals: " + scoreAnimals;
-
+    if (!finalPhase) {
+        document.getElementsByClassName('p1')[0].innerHTML = "Active Player: " + activePlayer + "</br>Humans: " + scoreHumans + " - Animals: " + scoreAnimals;
+    } else if (finalPhaseCountdown > 0) {
+        document.getElementsByClassName('p1')[0].innerHTML = "Active Player: " + activePlayer + "</br>Humans: " + scoreHumans + " - Animals: " + scoreAnimals + "</br>FINAL COUNTDOWN: " + finalPhaseCountdown;
+    } else {
+        document.getElementsByClassName('p1')[0].innerHTML = "Active Player: " + activePlayer + "</br>Humans: " + scoreHumans + " - Animals: " + scoreAnimals + "</br>GAME OVER!";
+    }
 }
 
 function tileClicked(t) {
@@ -133,7 +156,19 @@ function tileDragged(t1, t2) {
         (tile.type == "duck" || tile.type == "feasant")
     ) {
         //handle action
-        if (!target.exists) {
+        if (target.idx > 48) {
+            //tried to move off the board
+            if (!finalPhase) {
+                console.log("final phase not started yet");
+            } else {
+                if (validateMove(tile, target)) {
+                    //move out the exit and score
+                    moveOutOfExit(tile);
+                } else {
+                    console.log("move not allowed");
+                }
+            }
+        } else if (!target.exists) {
             //tried to move to an empty space
             console.log(activePlayer + " tried to move to an empty tile at " + t2 + " using a " + tile.type + " at " + t1);
             if (validateMove(tile, target)) {
@@ -183,6 +218,7 @@ function validateMove(t1, t2) {
             }
         }
     } else if (t1.j == t2.j) {
+        //console.log("horizontal move");
         //CHECK DISTANCE FOR SLOW TILES
         if (t1.type == "bear" || t1.type == "lumberjack") {
             if (abs(t1.i - t2.i) > 1) {
@@ -190,7 +226,6 @@ function validateMove(t1, t2) {
                 console.log("step too big");
             }
         }
-        //console.log("horizontal move");
         //TILES IN BETWEEN EMPTY?
         if (t1.i < t2.i) {
             for (let n = t1.i + 1; n < t2.i; n++) {
@@ -224,25 +259,17 @@ function executeMove(t1, t2) {
     endTurn();
 }
 
-function tileDraggedOffBoard(t1, direction) {
-    //console.log("dragged tile " + t1 + " to tile " + t2);
-
-    let tile = tileArray[t1];
-
-    //make sure the player is allowed to use this tile
-    if (
-        ((tile.type == "bear" || tile.type == "fox") && activePlayer == "Animals") ||
-        ((tile.type == "hunter -->" || tile.type == "lumberjack") && activePlayer == "Humans") ||
-        (tile.type == "duck" || tile.type == "feasant")
-    ) {
-        //check alignment with exit
-
-
-
-
-
-
+function moveOutOfExit(t1) {
+    //ADD POINTS TO SCORE
+    if (activePlayer == "Humans") {
+        scoreHumans += t1.value;
+    } else {
+        scoreAnimals += t1.value;
     }
+    //remove the tile
+    t1.clear();
+    //end turn
+    endTurn();
 }
 
 function attack(attacker, prey) {
@@ -293,16 +320,6 @@ function mousePressed() {
 function mouseReleased() {
     //console.log("RELEASED at " + idx);
     endTileIndex = idx;
-
-    if (mouseY < 0 && mouseX > 0 && mouseX < width) {
-        offBoardDirection = 0; //UP
-    } else if (mouseX > width && mouseY > 0 && mouseY < height) {
-        offBoardDirection = 1; //RIGHT
-    } else if (mouseY > height && mouseX > 0 && mouseX < width) {
-        offBoardDirection = 2; //DOWN
-    } else if (mouseX < 0 && mouseY > 0 && mouseY < height) {
-        offBoardDirection = 3; //LEFT
-    }
 }
 
 function endTurn() {
@@ -310,6 +327,9 @@ function endTurn() {
         activePlayer = 'Animals';
     } else {
         activePlayer = 'Humans';
+    }
+    if (finalPhase) {
+        finalPhaseCountdown--;
     }
 }
 
