@@ -64,7 +64,11 @@ class Tile {
                 )
             ) {
                 noFill();
-                stroke(255, 0, 0); //red
+                if (activePlayer == "Humans") {
+                    stroke(255, 0, 0); //red
+                } else {
+                    stroke(0, 0, 255); //blue
+                }
                 strokeWeight(2);
                 rect(4 - width / 14, 4 - height / 14, width / 7 - 8, height / 7 - 8);
             } else {
