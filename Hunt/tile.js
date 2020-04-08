@@ -50,6 +50,7 @@ class Tile {
             if (this.hidden) {
 
                 //tile back
+                rotate(this.orientation * TWO_PI / 4);
                 image(tileImg, this.margin - width / 14, this.margin - height / 14, width / 7 - 2 * this.margin, height / 7 - 2 * this.margin, 232, 0, 114, 114);
             }
             else {
