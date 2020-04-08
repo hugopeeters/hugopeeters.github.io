@@ -1,5 +1,6 @@
 let tileArray = []; //really the array of places on the board, so empty places are tiles with .exist == false
 let p, p1;
+let btn;
 let idx, idxOff;
 let beginTileIndex, endTileIndex;
 let activePlayer = 'Humans'; //Humans start the game
@@ -7,6 +8,12 @@ let scoreHumans = 0;
 let scoreAnimals = 0;
 let finalPhase = false;
 let finalPhaseCountdown = 10;
+let boardImg, tileImg;
+
+function preload() {
+    boardImg = loadImage('board.png');
+    tileImg = loadImage('tiles.png');
+}
 
 function setup() {
     createP().parent('canvas');
@@ -16,9 +23,12 @@ function setup() {
     p.addClass('p');
     p1 = createP().parent('canvas');
     p1.addClass('p1');
+    btn = createButton('pass');
+    btn.parent('canvas');
+    btn.mousePressed(endTurn);
 
     //create the blank space in the center of the board
-    tileArray.push(new Tile(3, 3, '', 0))
+    tileArray.push(new Tile(3, 3, '', 0, null, null))
     tileArray[0].exists = false;
 
     //create all 48 tiles in the game
@@ -27,21 +37,21 @@ function setup() {
 
             //put each tile in a random available position on the board
             let [i, j] = selectRandomFreePosition();
-            tileArray.push(new Tile(i, j, tileType.name, tileType.value));
+            tileArray.push(new Tile(i, j, tileType.name, tileType.value, tileType["img-x"], tileType["img-y"]));
         }
     });
 
     //add four tiles for the exits
-    tileArray.push(new Tile(3, -1, 'exit', 0));
+    tileArray.push(new Tile(3, -1, 'exit', 0, null, null));
     tileArray[49].idx = 49;
     tileArray[49].hidden = false;
-    tileArray.push(new Tile(7, 3, 'exit', 0));
+    tileArray.push(new Tile(7, 3, 'exit', 0, null, null));
     tileArray[50].idx = 50;
     tileArray[50].hidden = false;
-    tileArray.push(new Tile(3, 7, 'exit', 0));
+    tileArray.push(new Tile(3, 7, 'exit', 0, null, null));
     tileArray[51].idx = 51;
     tileArray[51].hidden = false;
-    tileArray.push(new Tile(-1, 3, 'exit', 0));
+    tileArray.push(new Tile(-1, 3, 'exit', 0, null, null));
     tileArray[52].idx = 52;
     tileArray[52].hidden = false;
 
@@ -53,6 +63,7 @@ function setup() {
 
 function draw() {
     background(51);
+    image(boardImg, 0, 0, width, height);
 
     //exits
     noFill()
@@ -100,7 +111,7 @@ function draw() {
     } else if (mouseX < 0 && mouseY > 0 && mouseY < height) {
         idx = 52; //LEFT
     } else {
-        console.log("mouse is out of bounds");
+        //console.log("mouse is out of bounds");
         idx = null;
     }
 
