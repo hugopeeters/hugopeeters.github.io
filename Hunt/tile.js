@@ -64,6 +64,10 @@ class Tile {
                     ) && (!this.hidden)
                 ) {
                     translate(mouseX - x, mouseY - y);
+                    noStroke();
+                    fill(0,100);
+                    let offset = 10;
+                    rect(this.margin - width / 14 + offset, this.margin - height / 14 + offset, width / 7 - 2 * this.margin, height / 7 - 2 * this.margin);
                     rotate(this.orientation * TWO_PI / 4);
                     image(tileImg, this.margin - width / 14, this.margin - height / 14, width / 7 - 2 * this.margin, height / 7 - 2 * this.margin, this.imgx, this.imgy, 114, 114);
                 } else {
