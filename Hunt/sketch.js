@@ -62,28 +62,33 @@ function setup() {
 }
 
 function draw() {
-    background(51);
+
+    //board image
     image(boardImg, 0, 0, width, height);
 
-    //exits
-    noFill()
-    stroke(150);
-    strokeWeight(16);
-    line(0, 3 * height / 7 + 8, 0, 4 * height / 7 - 8);
-    line(width, 3 * height / 7 + 8, width, 4 * height / 7 - 8);
-    line(3 * width / 7 + 8, 0, 4 * width / 7 - 8, 0);
-    line(3 * width / 7 + 8, height, 4 * width / 7 - 8, height);
-
+    //tiles
     for (tile of tileArray) {
         if (tile != 0) {
-            //board grid
-            tile.drawBoard();
-            //tile itself
-            tile.draw();
+            if (tile.idx == beginTileIndex) {
+                tile.draw();
+                tile.redraw = true;
+            } else {
+                tile.draw();
+            }
         }
     }
 
-    //CHECK IF ALL TILES HAVE BEEN REVEALED, THEN START FINAL PHASE
+    //redraw the tile in hand so it float over all other tiles
+    for (tile of tileArray) {
+        if (tile != 0) {
+            if (tile.redraw) {
+                tile.draw();
+            } 
+            tile.redraw = false;
+        }
+    }
+
+    //check to start final phase
     if (!finalPhase) {
         let allRevealed = true;
         for (t of tileArray) {
@@ -202,9 +207,11 @@ function tileDragged(t1, t2) {
 
 function validateMove(t1, t2) {
     let allowed = true;
+
     //VERTICAL OR HORIZONTAL MOVE?
     if (t1.i == t2.i) {
         //console.log("vertical move");
+
         //CHECK DISTANCE FOR SLOW TILES
         if (t1.type == "bear" || t1.type == "lumberjack") {
             if (abs(t1.j - t2.j) > 1) {
@@ -230,6 +237,7 @@ function validateMove(t1, t2) {
         }
     } else if (t1.j == t2.j) {
         //console.log("horizontal move");
+
         //CHECK DISTANCE FOR SLOW TILES
         if (t1.type == "bear" || t1.type == "lumberjack") {
             if (abs(t1.i - t2.i) > 1) {
@@ -262,28 +270,35 @@ function validateMove(t1, t2) {
 
 function executeMove(t1, t2) {
     console.log("move allowed; excecuting move");
+
     //COPY PROPERTIES TO TARGET TILE
     t2.overwriteWith(t1);
+
     //CLEAR SOURCE TILE
     t1.clear();
+
     //end the turn
     endTurn();
 }
 
 function moveOutOfExit(t1) {
+
     //ADD POINTS TO SCORE
     if (activePlayer == "Humans") {
         scoreHumans += t1.value;
     } else {
         scoreAnimals += t1.value;
     }
+
     //remove the tile
     t1.clear();
+
     //end turn
     endTurn();
 }
 
 function attack(attacker, prey) {
+
     //CHECK IF ATTACK IS POSSIBLE
     if (validateMove(attacker, prey)) {
         if (
@@ -300,13 +315,13 @@ function attack(attacker, prey) {
             (attacker.type == "bear" && (prey.type == "hunter -->" || prey.type == "lumberjack")) ||
             (attacker.type == "fox" && (prey.type == "feasant" || prey.type == "duck"))
         ) {
+
             //ADD POINTS TO SCORE
             if (activePlayer == "Humans") {
                 scoreHumans += prey.value;
             } else {
                 scoreAnimals += prey.value;
             }
-
             //console.log("attacker orientation: " + attacker.orientation);
 
             //MOVE TILE
