@@ -334,6 +334,7 @@ const s4 = (sketch) => {
     let wind;
     let w;
     let wOff;
+    let vibesHue;
 
 
     sketch.preload = function () {
@@ -354,6 +355,8 @@ const s4 = (sketch) => {
                 }
             }
         }
+        sketch.colorMode(sketch.HSB);
+        vibesHue = 0;
 
         gravity = sketch.createVector(0, 1);
         w = sketch.createVector(0, 0);
@@ -372,6 +375,7 @@ const s4 = (sketch) => {
             rain[i].update();
             rain[i].render();
         }
+        vibesHue = (vibesHue + 1 ) % 360;
     }
 
     class Drop {
@@ -426,9 +430,10 @@ const s4 = (sketch) => {
             let y = sketch.floor(this.pos.y);
             if (x >= 0 && x < sketch.width && y >= 0 && y < sketch.height) {
                 if (pxl[x][y]) {
-                    sketch.stroke(sketch.floor(sketch.random(210, 215)), sketch.floor(sketch.random(10, 15)), sketch.floor(sketch.random(100, 150)), 150);
+                    //sketch.stroke(sketch.floor(sketch.random(210, 215)), sketch.floor(sketch.random(10, 15)), sketch.floor(sketch.random(100, 150)), 150);
+                    sketch.stroke(vibesHue, 100, 100);
                 } else {
-                    sketch.stroke(220, 220, 255, 150);
+                    sketch.stroke(240, 14, 100, 150);
                 }
                 sketch.strokeWeight(1 * this.z);
                 sketch.line(this.ppos.x, this.ppos.y, this.pos.x, this.pos.y);
