@@ -13,6 +13,7 @@ layout in `_layouts/`, and the sidebar menu is generated from `_data/projects.ym
    ---
    layout: project
    title: "My Project"
+   description: "One line shown on the home page card."
    scripts:
      - sketch.js
      - particle.js
@@ -26,6 +27,9 @@ layout in `_layouts/`, and the sidebar menu is generated from `_data/projects.ym
    Optional front matter: `p5: false` skips loading p5.js, and `head: |` adds
    extra tags (libraries, styles) to the page `<head>`.
 
-2. Add the project to `_data/projects.yml` so it shows up in the menu.
+2. Add a `thumb.jpg` (480×360) screenshot to the folder for the home page card.
+
+3. Add the project to `_data/projects.yml` so it shows up in the menu and on the
+   home page.
 
 To preview locally, run `jekyll serve` and open http://localhost:4000.

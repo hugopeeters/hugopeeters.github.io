@@ -1,9 +1,23 @@
 ---
 layout: default
 p5: false
+description: "Hobby projects by Hugo Peeters: simulations, games and generative art, mostly made with p5.js."
 ---
+<img src="content/GogglesSquare.jpg" alt="Me" class="w3-image w3-padding-32" width="200" height="200">
 <h1>Welcome to my portfolio</h1>
 <p>On this website you can view all my hobby projects in alphabetical order. Most are made using <a
     href="https://p5js.org">p5.js</a>. All code can be found on my <a
     href="https://github.com/hugopeeters">GitHub</a></p>
-<img src="content/GogglesSquare.jpg" alt="Me" class="w3-image w3-padding-32" width="250" height="250">
+
+<div class="gallery">
+  {%- for project in site.data.projects %}
+  {%- assign p = site.pages | where: "url", project.url | first %}
+  <a class="card" href="{{ project.url }}">
+    <img src="{{ project.url }}thumb.jpg" alt="" width="480" height="360" loading="lazy">
+    <div class="card-body">
+      <h3>{{ p.title }}</h3>
+      <p>{{ p.description }}</p>
+    </div>
+  </a>
+  {%- endfor %}
+</div>
