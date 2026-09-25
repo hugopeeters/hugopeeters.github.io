@@ -412,3 +412,8 @@ canvas {
         margin-left: 0
     }
 }
+
+/* Highlight the current page in the menu */
+#mySidebar .active {
+    background-color: #757575
+}
