@@ -417,3 +417,50 @@ canvas {
 #mySidebar .active {
     background-color: #757575
 }
+
+/* Project gallery on the home page */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 32px 0;
+    text-align: left
+}
+
+.card {
+    display: block;
+    background-color: #fff;
+    color: #616161;
+    text-decoration: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s, transform 0.2s
+}
+
+.card:hover, .card:focus-visible {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px)
+}
+
+.card img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover
+}
+
+.card-body {
+    padding: 8px 12px 12px
+}
+
+.card h3 {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0 0 4px;
+    color: #424242
+}
+
+.card p {
+    font-size: 13px;
+    margin: 0
+}
