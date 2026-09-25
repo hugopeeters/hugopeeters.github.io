@@ -1,0 +1,8 @@
+<!-- Sidebar/menu, generated from _data/projects.yml -->
+<nav class="w3-sidebar w3-bar-block w3-dark-grey w3-animate-left w3-text-white w3-top w3-center" id="mySidebar"><br>
+  <h3 class="w3-padding-64 w3-center"><b>HUGO<br>PEETERS</b></h3>
+  <a href="/" class="w3-bar-item w3-button{% if page.url == '/' %} active{% endif %}">HOME</a>
+  {%- for project in site.data.projects %}
+  <a href="{{ project.url }}" class="w3-bar-item w3-button{% if page.url == project.url %} active{% endif %}">{{ project.menu }}</a>
+  {%- endfor %}
+</nav>

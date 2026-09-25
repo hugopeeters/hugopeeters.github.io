@@ -1,35 +1,18 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-  <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.min.js"></script>
-  <link rel="stylesheet" href="/style.css">
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Evolution · Hugo Peeters</title>
-</head>
-
-<body class="w3-light-grey w3-content" style="max-width:1600px">
-  <span id="nav-placeholder"></span>
-  <div class="w3-main">
-    <div class="w3-container w3-light-grey w3-center w3-text-grey w3-padding-32" id="about">
-      <h2>Evolution</h2>
-      <p>
-        A simulation of evolutionary steering behaviours. Green dots are food, red dots are poison. Offspring inherit
-        traits from their parent, with random mutations. Statistics show the distribution of families (common
-        ancestors), age and generations. The hightlighted vehicle is the current top performer and shows it's specific traits.
-      </p>
-      <div id="canvas"></div>
-    </div>
-  </div>
-  <script src="/nav.js"></script>
-  <script src="sketch.js"></script>
-  <script src="barchart.js"></script>
-  <script src="dna.js"></script>
-  <script src="food.js"></script>
-  <script src="stackedAreaChart.js"></script>
-  <script src="stats.js"></script>
-  <script src="vehicle.js"></script>
-</body>
-
-</html>
+---
+layout: project
+title: "Evolution"
+scripts:
+  - sketch.js
+  - barchart.js
+  - dna.js
+  - food.js
+  - stackedAreaChart.js
+  - stats.js
+  - vehicle.js
+---
+<p>
+  A simulation of evolutionary steering behaviours. Green dots are food, red dots are poison. Offspring inherit
+  traits from their parent, with random mutations. Statistics show the distribution of families (common
+  ancestors), age and generations. The hightlighted vehicle is the current top performer and shows it's specific traits.
+</p>
+<div id="canvas"></div>
