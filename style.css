@@ -369,3 +369,46 @@ html, body {
 .w3-btn:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
 }
+/* Layout: fixed sidebar on wide screens, stacked menu on narrow screens */
+#mySidebar {
+    z-index: 9;
+    width: 300px;
+    font-weight: bold
+}
+
+.w3-main {
+    margin-left: 300px
+}
+
+/* Scale sketches down to fit narrow screens */
+canvas {
+    max-width: 100%;
+    height: auto !important
+}
+
+#mapid {
+    max-width: 100%
+}
+
+@media (max-width:800px) {
+    #mySidebar {
+        position: static !important;
+        width: 100%;
+        height: auto;
+        padding-bottom: 8px
+    }
+    #mySidebar > br {
+        display: none
+    }
+    #mySidebar h3 {
+        padding: 16px 0 8px !important
+    }
+    #mySidebar .w3-bar-item {
+        display: inline-block;
+        width: auto;
+        padding: 4px 8px
+    }
+    .w3-main {
+        margin-left: 0
+    }
+}

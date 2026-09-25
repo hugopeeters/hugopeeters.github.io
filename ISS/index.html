@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>Where is the ISS?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Where is the ISS? · Hugo Peeters</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
         crossorigin="" />
@@ -17,14 +18,11 @@
         }
     </style>
     <link rel="stylesheet" href="/style.css">
-    <!-- Load navigation from separate html file-->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 </head>
 
 <body class="w3-light-grey w3-content" style="max-width:1600px">
     <span id="nav-placeholder"></span>
-    <div class="w3-main" style="margin-left:300px">
+    <div class="w3-main">
         <div class="w3-container w3-light-grey w3-center w3-text-grey w3-padding-32" id="about">
             <h2>Where is the ISS?</h2>
             <p>Real-time tracking of the International Space Station using the <a href="https://wheretheiss.at" target="_blank">WhereTheIssAt API</a>.</p>
@@ -52,9 +50,16 @@
                 let firstTime = true;
 
                 async function getData() {
-                    //fetch data
-                    const response = await fetch(API_URL);
-                    const data = await response.json();
+                    //fetch data, skipping this update if the API is unavailable
+                    let data;
+                    try {
+                        const response = await fetch(API_URL);
+                        if (!response.ok) return;
+                        data = await response.json();
+                    } catch (err) {
+                        console.warn('ISS position unavailable:', err);
+                        return;
+                    }
                     const { latitude, longitude } = data;
 
                     //ISS lat long
@@ -71,15 +76,11 @@
                 //run function
                 getData();
 
-                setInterval(getData, 1000);
+                setInterval(getData, 3000);
             </script>
         </div>
     </div>
-    <script>
-        $.get("/navigation.html", function (data) {
-            $("#nav-placeholder").replaceWith(data);
-        });
-    </script>
+    <script src="/nav.js"></script>
 </body>
 
 </html>
