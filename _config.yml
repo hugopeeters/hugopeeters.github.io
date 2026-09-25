@@ -1,1 +1,5 @@
 title: Hugo Peeters
+
+# Source design files stay in the repo but are not published on the site
+exclude:
+  - Hunt/originals
